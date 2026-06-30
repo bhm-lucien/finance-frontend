@@ -17,6 +17,8 @@ interface RealtimeData {
   ask: number
   time: string
   is_realtime: boolean
+  limit_up?: number
+  limit_down?: number
 }
 
 interface HeaderProps {
@@ -54,7 +56,6 @@ export default function Header({ stockId, stockName, latest, realtime, children 
   const singleVol = realtime?.single_volume || 0
   const bid = realtime?.bid || price
   const ask = realtime?.ask || price
-  const tradeTime = realtime?.time ?? ''
   const isRealtime = realtime?.is_realtime ?? false
 
   const isUp = change >= 0
