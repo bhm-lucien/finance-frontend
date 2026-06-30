@@ -1,0 +1,175 @@
+/**
+ * API 服務層 — 與後端通訊
+ */
+import axios from 'axios'
+
+const API_BASE = import.meta.env.VITE_API_URL || '/api'
+
+const api = axios.create({
+  baseURL: API_BASE,
+  timeout: 30000,
+})
+
+/** 取得個股完整分析資料 */
+export async function fetchStockAnalysis(stockId: string, days = 120) {
+  const res = await api.get(`/stock/analysis/${stockId}`, { params: { days } })
+  return res.data
+}
+
+/** 取得即時股價 */
+export async function fetchRealtimePrice(stockId: string) {
+  const res = await api.get(`/stock/realtime/${stockId}`)
+  return res.data
+}
+
+/** 取得今日盤中分時走勢 */
+export async function fetchIntradayTicks(stockId: string) {
+  const res = await api.get(`/stock/intraday/${stockId}`)
+  return res.data
+}
+
+/** 取得大盤指標 */
+export async function fetchMarketIndices() {
+  const res = await api.get('/stock/market-indices')
+  return res.data
+}
+
+/** 取得全部股票清單 */
+export async function fetchStockList() {
+  const res = await api.get('/stock/stock-list')
+  return res.data
+}
+
+/** 取得當沖指標 */
+export async function fetchDayTrading(stockId: string) {
+  const res = await api.get(`/stock/day-trading/${stockId}`)
+  return res.data
+}
+
+/** 取得財經新聞 */
+export async function fetchNews(stockId: string = '') {
+  const res = await api.get('/stock/news', { params: { stock_id: stockId } })
+  return res.data
+}
+
+/** 取得全市場漲跌停統計 */
+export async function fetchMarketLimitStats() {
+  const res = await api.get('/stock/market-limit-stats')
+  return res.data
+}
+
+/** 取得 AI 操盤建議 */
+export async function fetchTradingAdvice(stockId: string) {
+  const res = await api.get(`/stock/trading-advice/${stockId}`)
+  return res.data
+}
+
+/** 取得券商持續吃貨分析 */
+export async function fetchBrokerAccumulation(stockId: string) {
+  const res = await api.get(`/stock/broker-accumulation/${stockId}`)
+  return res.data
+}
+
+/** 取得產業分類及成分股 */
+export async function fetchIndustryClassification() {
+  const res = await api.get('/stock/industry-classification')
+  return res.data
+}
+
+/** 取得 K 線型態辨識分析 */
+export async function fetchKlinePattern(stockId: string) {
+  const res = await api.get(`/stock/kline-pattern/${stockId}`)
+  return res.data
+}
+
+/** 取得 K 棒趨勢線分析 */
+export async function fetchTrendline(stockId: string) {
+  const res = await api.get(`/stock/trendline/${stockId}`)
+  return res.data
+}
+
+/** 取得三大法人買賣超 */
+export async function fetchInstitutional(stockId: string, days = 30) {
+  const res = await api.get(`/stock/institutional/${stockId}`, { params: { days } })
+  return res.data
+}
+
+/** 取得融資融券資料 */
+export async function fetchMargin(stockId: string, days = 30) {
+  const res = await api.get(`/stock/margin/${stockId}`, { params: { days } })
+  return res.data
+}
+
+/** 取得主力意圖分析 */
+export async function fetchMainForce(stockId: string) {
+  const res = await api.get(`/stock/main-force/${stockId}`)
+  return res.data
+}
+
+/** 取得隔日沖風險分析 */
+export async function fetchDayTradeRisk(stockId: string) {
+  const res = await api.get(`/stock/day-trade-risk/${stockId}`)
+  return res.data
+}
+
+/** 取得飆股雷達評分 */
+export async function fetchRadar(stockId: string) {
+  const res = await api.get(`/stock/radar/${stockId}`)
+  return res.data
+}
+
+/** 取得明日劇本推演 */
+export async function fetchScenarios(stockId: string) {
+  const res = await api.get(`/stock/scenarios/${stockId}`)
+  return res.data
+}
+
+/** 取得個股健康度 */
+export async function fetchHealth(stockId: string) {
+  const res = await api.get(`/stock/health/${stockId}`)
+  return res.data
+}
+
+/** 取得預警燈號 */
+export async function fetchSignal(stockId: string) {
+  const res = await api.get(`/stock/signal/${stockId}`)
+  return res.data
+}
+
+/** 取得情緒指數 */
+export async function fetchSentiment(stockId: string) {
+  const res = await api.get(`/stock/sentiment/${stockId}`)
+  return res.data
+}
+
+/** 取得 AI 總結建議 */
+export async function fetchSummary(stockId: string) {
+  const res = await api.get(`/stock/summary/${stockId}`)
+  return res.data
+}
+
+/** 取得 LSTM 預測結果 */
+export async function fetchForecast(stockId: string) {
+  const res = await api.get(`/predict/forecast/${stockId}`)
+  return res.data
+}
+
+/** 手動觸發模型訓練 */
+export async function trainModel(stockId: string, epochs = 80) {
+  const res = await api.post(`/predict/train/${stockId}`, null, { params: { epochs } })
+  return res.data
+}
+
+/** 回測：燈號準確度 */
+export async function fetchBacktestAccuracy(stockId: string, days = 180) {
+  const res = await api.get(`/backtest/signal-accuracy/${stockId}`, { params: { days } })
+  return res.data
+}
+
+/** 回測：策略損益 */
+export async function fetchBacktestPnl(stockId: string, days = 180) {
+  const res = await api.get(`/backtest/strategy-pnl/${stockId}`, { params: { days } })
+  return res.data
+}
+
+export default api

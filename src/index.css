@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全域深色科技風樣式 */
+html {
+  font-size: 18px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0e1a;
+  color: #e2e8f0;
+  font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+  overflow-x: hidden;
+}
+
+/* 強制覆蓋所有過小的固定 px 字體 */
+[class*="text-[9px]"],
+[class*="text-[10px]"],
+[class*="text-[11px]"] {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+/* 背景純黑，不加紋理 */
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* 卡片發光邊框 — 加強版 */
+.card-glow {
+  border: 1px solid #1a3a5c;
+  background: linear-gradient(135deg, #0c1929 0%, #0a1220 100%);
+  box-shadow:
+    0 0 6px rgba(0, 212, 255, 0.08),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), transparent);
+}
+
+.card-glow:hover {
+  border-color: #2a5a8f;
+  box-shadow:
+    0 0 12px rgba(0, 212, 255, 0.15),
+    0 0 30px rgba(0, 212, 255, 0.05),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 頂部欄掃描線動畫 */
+@keyframes scanline {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.header-scanline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  animation: scanline 4s linear infinite;
+}
+
+/* 脈動動畫 */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* 進度條動畫 */
+.progress-bar {
+  background: linear-gradient(90deg, currentColor 0%, currentColor 100%);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 數字微弱光暈 */
+.number-highlight {
+  text-shadow: 0 0 4px rgba(255, 71, 87, 0.3);
+}
+
+/* 捲軸美化 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #050a15;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e3a5f;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a5a8f;
+}
