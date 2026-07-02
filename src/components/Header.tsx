@@ -2,7 +2,6 @@
  * 頂部標題列 — 顯示系統名稱、即時報價、日期時間
  */
 import { ReactNode, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 
 interface RealtimeData {
   price: number
@@ -100,12 +99,6 @@ export default function Header({ stockId, stockName, latest, realtime, children 
 
       {/* 右側日期 + 即時狀態 */}
       <div className="text-right flex items-center gap-3">
-        <Link
-          to="/backtest"
-          className="px-2.5 py-1 text-[10px] border border-dark-border rounded hover:border-neon-purple/50 text-gray-400 hover:text-neon-purple transition"
-        >
-          📊 回測
-        </Link>
         <div>
           <p className="text-[11px] text-gray-400">
             日期 &nbsp; <span className="text-white font-medium">{dateStr}</span>
