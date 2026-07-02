@@ -2,10 +2,12 @@
  * 全方位 AI 股票分析儀表板 — 主應用程式
  * 5 欄 × 3 排 = 15 格 Dashboard 佈局
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Header from './components/Header'
 import StockSelector from './components/StockSelector'
 import WatchlistPanel from './components/WatchlistPanel'
+import StockFilterPanel from './components/StockFilterPanel'
+import BacktestPanel from './components/BacktestPanel'
 import IndustryTabs from './components/IndustryTabs'
 import MarketBar from './components/MarketBar'
 import ModuleCard from './components/ModuleCard'
@@ -15,18 +17,22 @@ import VolumeProfileChart from './components/charts/VolumeProfileChart'
 import PredictionChart from './components/charts/PredictionChart'
 import IntradayChart from './components/charts/IntradayChart'
 import TrendLineChart from './components/charts/TrendLineChart'
+import SectorFlowChart from './components/charts/SectorFlowChart'
 import BullBearModule from './components/modules/BullBearModule'
 import HealthModule from './components/modules/HealthModule'
+import SectorRankModule from './components/modules/SectorRankModule'
 import {
   fetchStockAnalysis, fetchForecast, fetchMainForce, fetchDayTradeRisk,
   fetchRadar, fetchScenarios, fetchHealth, fetchSignal, fetchSentiment,
   fetchSummary, fetchRealtimePrice, fetchIntradayTicks, fetchMarketIndices,
   fetchStockList, fetchDayTrading, fetchNews, fetchMarketLimitStats,
   fetchTradingAdvice, fetchBrokerAccumulation, fetchKlinePattern, fetchTrendline,
+  fetchSectorFlow,
 } from './services/api'
 import { getStockName, updateStockNames } from './data/stockNames'
 import { useWatchlist } from './hooks/useWatchlist'
 import { useNotification } from './hooks/useNotification'
+import { useRealtimeQuote } from './hooks/useRealtimeQuote'
 
 // ── 輔助組件 ──
 
@@ -82,10 +88,32 @@ export default function App() {
   const [brokerData, setBrokerData] = useState<any>(null)
   const [klinePattern, setKlinePattern] = useState<any>(null)
   const [trendlineData, setTrendlineData] = useState<any>(null)
+  const [sectorFlow, setSectorFlow] = useState<any>(null)
   const [watchlistOpen, setWatchlistOpen] = useState(false)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [backtestOpen, setBacktestOpen] = useState(false)
   const [notifyEnabled, setNotifyEnabled] = useState(true)
 
   const { watchlist, addStock, removeStock } = useWatchlist()
+
+  // 即時報價 WebSocket 推播
+  const { quote: wsQuote, isConnected: wsConnected } = useRealtimeQuote(stockId)
+  const wsConnectedRef = useRef(wsConnected)
+  wsConnectedRef.current = wsConnected
+
+  // 當 WebSocket 收到新報價時更新 realtime 狀態
+  useEffect(() => {
+    if (wsQuote && wsQuote.price > 0) {
+      setRealtime(wsQuote)
+      // 加入分時走勢
+      if (wsQuote.is_realtime && wsQuote.time && wsQuote.time !== '--:--:--') {
+        setIntradayTicks(prev => {
+          if (prev.length > 0 && prev[prev.length - 1].time === wsQuote.time) return prev
+          return [...prev, { time: wsQuote.time, price: wsQuote.price }]
+        })
+      }
+    }
+  }, [wsQuote])
 
   // 通知功能
   useNotification({
@@ -111,7 +139,10 @@ export default function App() {
     loadMarketIndices()
 
     const realtimeInterval = setInterval(() => {
-      loadRealtime()
+      // WebSocket 斷線時才用 HTTP 輪詢即時報價
+      if (!wsConnectedRef.current) {
+        loadRealtime()
+      }
       loadRealtimeModules()
     }, 30 * 1000)
     const marketInterval = setInterval(loadMarketIndices, 60 * 1000)
@@ -223,6 +254,8 @@ export default function App() {
       ])
       if (result.indices) setMarketIndices(result.indices)
       if (limits) setLimitStats(limits)
+      // 同時載入板塊資金流向
+      fetchSectorFlow(5).then(r => { if (r.sectors) setSectorFlow(r) }).catch(() => {})
     } catch { /* 靜默 */ }
   }
 
@@ -259,6 +292,12 @@ export default function App() {
         <button onClick={() => setWatchlistOpen(true)} className="px-2 py-1 text-xs border border-dark-border rounded hover:border-neon-blue/50 text-gray-400 hover:text-neon-blue transition" title="自選股清單">
           ★ 自選 ({watchlist.length})
         </button>
+        <button onClick={() => setFilterOpen(true)} className="px-2 py-1 text-xs border border-dark-border rounded hover:border-neon-purple/50 text-gray-400 hover:text-neon-purple transition" title="條件篩選器">
+          🔍 篩選
+        </button>
+        <button onClick={() => setBacktestOpen(true)} className="px-2 py-1 text-xs border border-dark-border rounded hover:border-neon-orange/50 text-gray-400 hover:text-neon-orange transition" title="策略回測">
+          📊 回測
+        </button>
         <button onClick={() => setNotifyEnabled(!notifyEnabled)} className={`px-2 py-1 text-xs border rounded transition ${notifyEnabled ? 'border-neon-green/30 text-neon-green bg-neon-green/10' : 'border-dark-border text-gray-500'}`} title={notifyEnabled ? '通知已開啟' : '通知已關閉'}>
           {notifyEnabled ? '🔔' : '🔕'}
         </button>
@@ -266,6 +305,12 @@ export default function App() {
 
       {/* 自選股面板 */}
       <WatchlistPanel isOpen={watchlistOpen} onClose={() => setWatchlistOpen(false)} watchlist={watchlist} currentStock={stockId} onSelect={(id) => { handleStockChange(id); setWatchlistOpen(false) }} onAdd={addStock} onRemove={removeStock} />
+
+      {/* 條件篩選器面板 */}
+      <StockFilterPanel isOpen={filterOpen} onClose={() => setFilterOpen(false)} onSelect={(id) => { handleStockChange(id); setFilterOpen(false) }} />
+
+      {/* 策略回測面板 */}
+      <BacktestPanel isOpen={backtestOpen} onClose={() => setBacktestOpen(false)} stockId={stockId} />
 
       {/* 產業分類頁籤 */}
       <div className="px-3 py-1.5 border-b border-dark-border/50 bg-dark-card/30">
@@ -288,8 +333,32 @@ export default function App() {
         <div className="flex-[7] grid grid-cols-3 gap-2 overflow-y-auto" style={{ gridAutoRows: 'minmax(320px, auto)' }}>
 
         {/* ── 第一排 ── */}
-        {/* 1. 主力意圖 */}
-        <ModuleCard number={1} title="AI 主力意圖分析圖" badge="ECF">
+        {/* 1. 產業資金流向 */}
+        <ModuleCard number={1} title="產業資金流向" badge="ECF">
+          <div className="h-full flex flex-col">
+            <div className="flex items-center gap-2 mb-1.5 flex-shrink-0">
+              {sectorFlow?.summary && (
+                <>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400">漲潮 {sectorFlow.summary.rising}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">輪動 {sectorFlow.summary.rotating}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-600/20 text-gray-400">觀望 {sectorFlow.summary.watching}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-400">退潮 {sectorFlow.summary.falling}</span>
+                </>
+              )}
+            </div>
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <SectorFlowChart sectors={sectorFlow?.sectors ?? []} />
+            </div>
+          </div>
+        </ModuleCard>
+
+        {/* 2. 今日產業焦點 */}
+        <ModuleCard number={2} title="今日產業焦點" badge="ECF">
+          <SectorRankModule sectors={sectorFlow?.sectors ?? []} onSelectStock={handleStockChange} />
+        </ModuleCard>
+
+        {/* 3. 主力意圖 */}
+        <ModuleCard number={3} title="AI 主力意圖分析圖" badge="ECF">
           <div className="space-y-1.5">
             <p className="text-gray-500 mb-1">AI 主力行為判讀表板</p>
             <BarIndicator label="主力洗盤" level={mainForce?.wash?.score ?? 2} color={getBarColor(mainForce?.wash?.score ?? 2)} />

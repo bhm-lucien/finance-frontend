@@ -172,4 +172,40 @@ export async function fetchBacktestPnl(stockId: string, days = 180) {
   return res.data
 }
 
+/** 取得產業板塊資金流向 */
+export async function fetchSectorFlow(days = 5) {
+  const res = await api.get('/stock/sector-flow', { params: { days } })
+  return res.data
+}
+
+/** 取得篩選器可用條件 */
+export async function fetchFilterConditions() {
+  const res = await api.get('/stock/filter/conditions')
+  return res.data
+}
+
+/** 條件式篩選股票 */
+export async function filterStocks(conditions: string[], maxResults = 30) {
+  const res = await api.post('/stock/filter', { conditions, max_results: maxResults })
+  return res.data
+}
+
+/** 取得回測策略列表 */
+export async function fetchBacktestStrategies() {
+  const res = await api.get('/backtest/strategies')
+  return res.data
+}
+
+/** 對個股執行單一策略回測 */
+export async function runStrategyBacktest(stockId: string, strategyId: string, days = 365) {
+  const res = await api.get(`/backtest/strategy/${stockId}/${strategyId}`, { params: { days } })
+  return res.data
+}
+
+/** 對個股跑所有策略回測摘要 */
+export async function runAllStrategiesBacktest(stockId: string, days = 365) {
+  const res = await api.get(`/backtest/strategy-all/${stockId}`, { params: { days } })
+  return res.data
+}
+
 export default api
