@@ -7,7 +7,7 @@ const API_BASE = import.meta.env.VITE_API_URL || '/api'
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 30000,
+  timeout: 60000,  // 60 秒（冷啟動時後端需要較長時間）
 })
 
 /** 取得個股完整分析資料 */
