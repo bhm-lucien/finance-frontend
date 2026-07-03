@@ -18,46 +18,26 @@ import PredictionChart from './components/charts/PredictionChart'
 import IntradayChart from './components/charts/IntradayChart'
 import TrendLineChart from './components/charts/TrendLineChart'
 import SectorFlowChart from './components/charts/SectorFlowChart'
+import HeatmapChart from './components/charts/HeatmapChart'
+import PERiverChart from './components/charts/PERiverChart'
 import BullBearModule from './components/modules/BullBearModule'
 import HealthModule from './components/modules/HealthModule'
 import SectorRankModule from './components/modules/SectorRankModule'
+import ChipContinuityPage from './pages/ChipContinuityPage'
+import CorrelationPage from './pages/CorrelationPage'
+import PortfolioHealthPage from './pages/PortfolioHealthPage'
 import {
-  fetchStockAnalysis, fetchForecast, fetchMainForce, fetchDayTradeRisk,
+  fetchStockAnalysis, fetchForecast, fetchDayTradeRisk,
   fetchRadar, fetchScenarios, fetchHealth, fetchSignal, fetchSentiment,
   fetchSummary, fetchRealtimePrice, fetchIntradayTicks, fetchMarketIndices,
   fetchStockList, fetchDayTrading, fetchNews, fetchMarketLimitStats,
   fetchTradingAdvice, fetchBrokerAccumulation, fetchKlinePattern, fetchTrendline,
-  fetchSectorFlow,
+  fetchSectorFlow, fetchHeatmap, fetchPERiver, fetchChipContinuity,
 } from './services/api'
 import { getStockName, updateStockNames } from './data/stockNames'
 import { useWatchlist } from './hooks/useWatchlist'
 import { useNotification } from './hooks/useNotification'
 import { useRealtimeQuote } from './hooks/useRealtimeQuote'
-
-// ── 輔助組件 ──
-
-function BarIndicator({ label, level, color }: { label: string; level: number; color: 'red' | 'orange' | 'green' }) {
-  const colorMap = { red: 'bg-neon-red', orange: 'bg-neon-orange', green: 'bg-neon-green' }
-  const textMap = { red: 'text-neon-red', orange: 'text-neon-orange', green: 'text-neon-green' }
-  const labelMap: Record<number, string> = { 1: '低', 2: '低', 3: '中', 4: '高', 5: '高' }
-  return (
-    <div className="flex items-center gap-2">
-      <span className="w-14 text-gray-400">{label}</span>
-      <div className="flex gap-0.5 flex-1">
-        {[1, 2, 3, 4, 5].map(i => (
-          <div key={i} className={`h-2.5 flex-1 rounded-sm ${i <= level ? colorMap[color] : 'bg-gray-800'}`} />
-        ))}
-      </div>
-      <span className={`w-4 ${textMap[color]}`}>{labelMap[level]}</span>
-    </div>
-  )
-}
-
-function getBarColor(score: number): 'red' | 'orange' | 'green' {
-  if (score >= 4) return 'red'
-  if (score >= 3) return 'orange'
-  return 'green'
-}
 
 // ── 主組件 ──
 
@@ -69,7 +49,6 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
   const [forecast, setForecast] = useState<any>(null)
   const [forecastLoading, setForecastLoading] = useState(false)
-  const [mainForce, setMainForce] = useState<any>(null)
   const [dayTradeRisk, setDayTradeRisk] = useState<any>(null)
   const [radar, setRadar] = useState<any>(null)
   const [scenarios, setScenarios] = useState<any>(null)
@@ -93,6 +72,10 @@ export default function App() {
   const [filterOpen, setFilterOpen] = useState(false)
   const [backtestOpen, setBacktestOpen] = useState(false)
   const [notifyEnabled, setNotifyEnabled] = useState(true)
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'chip' | 'correlation' | 'portfolio'>('dashboard')
+  const [heatmapData, setHeatmapData] = useState<any>(null)
+  const [peRiverData, setPeRiverData] = useState<any>(null)
+  const [chipData, setChipData] = useState<any>(null)
 
   const { watchlist, addStock, removeStock } = useWatchlist()
 
@@ -158,9 +141,8 @@ export default function App() {
   async function loadData() {
     try {
       setLoading(true)
-      const [result, mf, dtr, rd, sc, hl, sg, snt, sm, dt] = await Promise.all([
+      const [result, dtr, rd, sc, hl, sg, snt, sm, dt] = await Promise.all([
         fetchStockAnalysis(stockId),
-        fetchMainForce(stockId).catch(() => null),
         fetchDayTradeRisk(stockId).catch(() => null),
         fetchRadar(stockId).catch(() => null),
         fetchScenarios(stockId).catch(() => null),
@@ -171,7 +153,6 @@ export default function App() {
         fetchDayTrading(stockId).catch(() => null),
       ])
       setData(result)
-      if (mf) setMainForce(mf)
       if (dtr) setDayTradeRisk(dtr)
       if (rd) setRadar(rd)
       if (sc) setScenarios(sc)
@@ -185,6 +166,8 @@ export default function App() {
       fetchBrokerAccumulation(stockId).then(r => { if (r.forces) setBrokerData(r) }).catch(() => {})
       fetchKlinePattern(stockId).then(r => { if (r.short_term) setKlinePattern(r) }).catch(() => {})
       fetchTrendline(stockId).then(r => { if (r.ohlcv) setTrendlineData(r) }).catch(() => {})
+      fetchPERiver(stockId).then(r => { if (r.data) setPeRiverData(r) }).catch(() => {})
+      fetchChipContinuity(stockId).then(r => { if (r.stock_id) setChipData(r) }).catch(() => {})
       setError(null)
     } catch (err) {
       setError('無法載入資料，請確認後端伺服器是否啟動')
@@ -224,14 +207,12 @@ export default function App() {
   async function loadRealtimeModules() {
     // 每 30 秒更新跟盤中價格相關的模組
     try {
-      const [mf, dtr, dt, ta, br] = await Promise.all([
-        fetchMainForce(stockId).catch(() => null),
+      const [dtr, dt, ta, br] = await Promise.all([
         fetchDayTradeRisk(stockId).catch(() => null),
         fetchDayTrading(stockId).catch(() => null),
         fetchTradingAdvice(stockId).catch(() => null),
         fetchBrokerAccumulation(stockId).catch(() => null),
       ])
-      if (mf) setMainForce(mf)
       if (dtr) setDayTradeRisk(dtr)
       if (dt) setDayTrading(dt)
       if (ta && !ta.error) setTradingAdvice(ta)
@@ -254,8 +235,9 @@ export default function App() {
       ])
       if (result.indices) setMarketIndices(result.indices)
       if (limits) setLimitStats(limits)
-      // 同時載入板塊資金流向
+      // 同時載入板塊資金流向 + 熱力圖
       fetchSectorFlow(5).then(r => { if (r.sectors) setSectorFlow(r) }).catch(() => {})
+      fetchHeatmap().then(r => { if (r.sectors) setHeatmapData(r) }).catch(() => {})
     } catch { /* 靜默 */ }
   }
 
@@ -320,6 +302,28 @@ export default function App() {
       {/* 大盤指標列 */}
       <MarketBar indices={marketIndices} limitStats={limitStats} />
 
+      {/* Tab 切換列 */}
+      <div className="px-3 py-1 border-b border-dark-border/50 bg-dark-card/30 flex items-center gap-1 flex-shrink-0">
+        {[
+          { key: 'dashboard', label: '📊 Dashboard', },
+          { key: 'chip', label: '🏦 籌碼連續性', },
+          { key: 'correlation', label: '🔗 相關性分析', },
+          { key: 'portfolio', label: '🏥 持倉健檢', },
+        ].map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key as any)}
+            className={`px-3 py-1 text-xs rounded transition ${
+              activeTab === tab.key
+                ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30'
+                : 'text-gray-400 hover:text-gray-200 hover:bg-dark-surface/50'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* 錯誤提示 */}
       {error && (
         <div className="mx-4 mt-2 p-2 rounded bg-neon-red/10 border border-neon-red/30 text-neon-red text-sm">
@@ -327,7 +331,25 @@ export default function App() {
         </div>
       )}
 
-      {/* === 主區塊：左右分欄 7:3 === */}
+      {/* === Tab 內容 === */}
+      {activeTab === 'chip' && (
+        <div className="flex-1 overflow-hidden">
+          <ChipContinuityPage onSelectStock={handleStockChange} />
+        </div>
+      )}
+      {activeTab === 'correlation' && (
+        <div className="flex-1 overflow-hidden">
+          <CorrelationPage watchlist={watchlist} />
+        </div>
+      )}
+      {activeTab === 'portfolio' && (
+        <div className="flex-1 overflow-hidden">
+          <PortfolioHealthPage />
+        </div>
+      )}
+
+      {/* === 主區塊：左右分欄 7:3（只在 Dashboard tab 顯示）=== */}
+      {activeTab === 'dashboard' && (
       <main className="flex-1 flex gap-3 p-3 overflow-hidden">
         {/* 左半邊 grid — 12 個模組 */}
         <div className="flex-[7] grid grid-cols-3 gap-2 overflow-y-auto" style={{ gridAutoRows: 'minmax(320px, auto)' }}>
@@ -358,20 +380,12 @@ export default function App() {
         </ModuleCard>
 
         {/* 3. 主力意圖 */}
-        <ModuleCard number={3} title="AI 主力意圖分析圖" badge="ECF">
-          <div className="space-y-1.5">
-            <p className="text-gray-500 mb-1">AI 主力行為判讀表板</p>
-            <BarIndicator label="主力洗盤" level={mainForce?.wash?.score ?? 2} color={getBarColor(mainForce?.wash?.score ?? 2)} />
-            <BarIndicator label="主力吸籌" level={mainForce?.accumulate?.score ?? 1} color={getBarColor(mainForce?.accumulate?.score ?? 1)} />
-            <BarIndicator label="主力出貨" level={mainForce?.distribute?.score ?? 1} color={getBarColor(mainForce?.distribute?.score ?? 1)} />
-            <BarIndicator label="軋空佈局" level={mainForce?.squeeze?.score ?? 1} color={getBarColor(mainForce?.squeeze?.score ?? 1)} />
-            <BarIndicator label="假突破" level={mainForce?.fake_breakout?.score ?? 1} color={getBarColor(mainForce?.fake_breakout?.score ?? 1)} />
-            <BarIndicator label="假多風險" level={mainForce?.fake_bull?.score ?? 1} color={getBarColor(mainForce?.fake_bull?.score ?? 1)} />
-            <BarIndicator label="誘空風險" level={mainForce?.bear_trap?.score ?? 1} color={getBarColor(mainForce?.bear_trap?.score ?? 1)} />
-            <div className="pt-1.5 mt-1 border-t border-dark-border/50">
-              <p className="text-gray-500">AI 主力結論：</p>
-              <p className="text-neon-orange mt-0.5">{mainForce?.conclusion ?? '載入中...'}</p>
-            </div>
+        <ModuleCard number={3} title="即時行情熱力圖" badge="ECF">
+          <div className="h-full">
+            <HeatmapChart
+              sectors={heatmapData?.sectors ?? []}
+              onSelectStock={handleStockChange}
+            />
           </div>
         </ModuleCard>
 
@@ -461,6 +475,69 @@ export default function App() {
                   />
                 </div>
               </div>
+            )}
+          </div>
+        </ModuleCard>
+
+        {/* 本益比河流圖 */}
+        <ModuleCard number={3} title="本益比河流圖" badge="ECF">
+          <div className="h-full">
+            {!peRiverData ? (
+              <p className="text-gray-500 text-center py-8">分析中...</p>
+            ) : (
+              <PERiverChart
+                data={peRiverData.data}
+                currentZone={peRiverData.current_zone}
+                currentPercentile={peRiverData.current_percentile}
+              />
+            )}
+          </div>
+        </ModuleCard>
+
+        {/* 籌碼連續性（個股） */}
+        <ModuleCard number={3} title="法人連買/大戶持股" badge="ECF">
+          <div className="space-y-2">
+            {!chipData ? (
+              <p className="text-gray-500 text-center py-4">載入中...</p>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2 rounded bg-neon-red/5 border border-neon-red/20 text-center">
+                    <p className="text-gray-500 text-[10px]">外資連買</p>
+                    <p className={`text-lg font-bold ${chipData.foreign_streak > 0 ? 'text-neon-red' : chipData.foreign_streak < 0 ? 'text-neon-green' : 'text-gray-400'}`}>
+                      {chipData.foreign_streak > 0 ? `${chipData.foreign_streak}天` : chipData.foreign_streak < 0 ? `連賣${Math.abs(chipData.foreign_streak)}天` : '—'}
+                    </p>
+                    <p className="text-gray-500 text-[10px]">累計 {chipData.foreign_total > 0 ? '+' : ''}{chipData.foreign_total.toLocaleString()} 張</p>
+                  </div>
+                  <div className="p-2 rounded bg-neon-purple/5 border border-neon-purple/20 text-center">
+                    <p className="text-gray-500 text-[10px]">投信連買</p>
+                    <p className={`text-lg font-bold ${chipData.trust_streak > 0 ? 'text-neon-red' : chipData.trust_streak < 0 ? 'text-neon-green' : 'text-gray-400'}`}>
+                      {chipData.trust_streak > 0 ? `${chipData.trust_streak}天` : chipData.trust_streak < 0 ? `連賣${Math.abs(chipData.trust_streak)}天` : '—'}
+                    </p>
+                    <p className="text-gray-500 text-[10px]">累計 {chipData.trust_total > 0 ? '+' : ''}{chipData.trust_total.toLocaleString()} 張</p>
+                  </div>
+                </div>
+                <div className="space-y-1.5 pt-1 border-t border-dark-border/30">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-400">融資趨勢</span>
+                    <span className={`${chipData.margin_trend === '增加' ? 'text-neon-orange' : chipData.margin_trend === '減少' ? 'text-neon-blue' : 'text-gray-400'}`}>
+                      {chipData.margin_trend}（{chipData.margin_change > 0 ? '+' : ''}{chipData.margin_change.toLocaleString()}張）
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-400">融券趨勢</span>
+                    <span className={`${chipData.short_trend === '增加' ? 'text-neon-orange' : chipData.short_trend === '減少' ? 'text-neon-blue' : 'text-gray-400'}`}>
+                      {chipData.short_trend}（{chipData.short_change > 0 ? '+' : ''}{chipData.short_change.toLocaleString()}張）
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-400">大戶持股變化</span>
+                    <span className={`font-bold ${chipData.big_holder_change > 0 ? 'text-neon-red' : chipData.big_holder_change < 0 ? 'text-neon-green' : 'text-gray-400'}`}>
+                      {chipData.big_holder_change > 0 ? '+' : ''}{chipData.big_holder_change}%
+                    </span>
+                  </div>
+                </div>
+              </>
             )}
           </div>
         </ModuleCard>
@@ -824,6 +901,7 @@ export default function App() {
           </div>
         </aside>
       </main>
+      )}
 
       {/* 底部聲明 */}
       <footer className="text-center text-gray-600 py-1 border-t border-dark-border/50 bg-dark-card/50">

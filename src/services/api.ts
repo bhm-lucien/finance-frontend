@@ -208,4 +208,46 @@ export async function runAllStrategiesBacktest(stockId: string, days = 365) {
   return res.data
 }
 
+/** 取得單一個股籌碼連續性分析 */
+export async function fetchChipContinuity(stockId: string, days = 30) {
+  const res = await api.get(`/stock/chip-continuity/${stockId}`, { params: { days } })
+  return res.data
+}
+
+/** 取得外資/投信連買排行榜 */
+export async function fetchChipContinuityRanking(topN = 20, days = 30) {
+  const res = await api.get('/stock/chip-continuity-ranking', { params: { top_n: topN, days } })
+  return res.data
+}
+
+/** 計算自選股漲跌相關性矩陣 */
+export async function fetchCorrelationMatrix(stockIds: string[], days = 60) {
+  const res = await api.post('/stock/correlation', { stock_ids: stockIds, days })
+  return res.data
+}
+
+/** AI 持倉健檢 */
+export async function fetchPortfolioHealth(holdings: { stock_id: string; shares: number; cost: number }[]) {
+  const res = await api.post('/stock/portfolio-health', { holdings })
+  return res.data
+}
+
+/** 取得即時行情熱力圖資料 */
+export async function fetchHeatmap() {
+  const res = await api.get('/stock/heatmap')
+  return res.data
+}
+
+/** 批量取得即時報價 */
+export async function fetchBatchRealtime(stockIds: string[]) {
+  const res = await api.post('/stock/batch-realtime', { stock_ids: stockIds })
+  return res.data
+}
+
+/** 取得本益比河流圖資料 */
+export async function fetchPERiver(stockId: string, years = 5) {
+  const res = await api.get(`/stock/pe-river/${stockId}`, { params: { years } })
+  return res.data
+}
+
 export default api
