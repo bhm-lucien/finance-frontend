@@ -166,8 +166,6 @@ export default function App() {
       fetchBrokerAccumulation(stockId).then(r => { if (r.forces) setBrokerData(r) }).catch(() => {})
       fetchKlinePattern(stockId).then(r => { if (r.short_term) setKlinePattern(r) }).catch(() => {})
       fetchTrendline(stockId).then(r => { if (r.ohlcv) setTrendlineData(r) }).catch(() => {})
-      fetchPERiver(stockId).then(r => { if (r.data) setPeRiverData(r) }).catch(() => {})
-      fetchChipContinuity(stockId).then(r => { if (r.stock_id) setChipData(r) }).catch(() => {})
       setError(null)
     } catch (err) {
       setError('無法載入資料，請確認後端伺服器是否啟動')
@@ -175,6 +173,10 @@ export default function App() {
     } finally {
       setLoading(false)
     }
+
+    // 獨立載入（不依賴 analysis 成功）
+    fetchPERiver(stockId).then(r => { if (r.data) setPeRiverData(r) }).catch(() => {})
+    fetchChipContinuity(stockId).then(r => { if (r.stock_id) setChipData(r) }).catch(() => {})
   }
 
   async function loadForecast() {
