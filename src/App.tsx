@@ -390,7 +390,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 2. K 線型態辨識 */}
-        <ModuleCard number={2} title="K 線型態辨識" badge="ECF">
+        <ModuleCard number={4} title="K 線型態辨識" badge="ECF">
           <div className="space-y-2 overflow-y-auto h-full">
             {!klinePattern ? (
               <p className="text-gray-500 text-center py-4">分析中...</p>
@@ -451,7 +451,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 3. K棒趨勢線 */}
-        <ModuleCard number={3} title="K棒趨勢線" badge="ECF">
+        <ModuleCard number={5} title="K棒趨勢線" badge="ECF">
           <div className="h-full">
             {!trendlineData ? (
               <p className="text-gray-500 text-center py-8">分析中...</p>
@@ -480,7 +480,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 本益比河流圖 */}
-        <ModuleCard number={3} title="本益比河流圖" badge="ECF">
+        <ModuleCard number={6} title="本益比河流圖" badge="ECF">
           <div className="h-full">
             {!peRiverData ? (
               <p className="text-gray-500 text-center py-8">分析中...</p>
@@ -495,7 +495,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 籌碼連續性（個股） */}
-        <ModuleCard number={3} title="法人連買/大戶持股" badge="ECF">
+        <ModuleCard number={7} title="法人連買/大戶持股" badge="ECF">
           <div className="space-y-2">
             {!chipData ? (
               <p className="text-gray-500 text-center py-4">載入中...</p>
@@ -543,7 +543,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 4. 隔日沖風險 */}
-        <ModuleCard number={4} title="隔日沖風險分析圖" badge="ECF">
+        <ModuleCard number={8} title="隔日沖風險分析圖" badge="ECF">
           <div className="space-y-2">
             <div className="text-center py-1">
               <p className="text-gray-500 mb-1">隔日沖風險：</p>
@@ -569,7 +569,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 5. 當沖指標（做多/做空方向） */}
-        <ModuleCard number={5} title="當沖指標" badge="ECF">
+        <ModuleCard number={9} title="當沖指標" badge="ECF">
           <div className="space-y-2">
             {/* 基本指標 */}
             <div className="grid grid-cols-4 gap-1.5 text-center pb-1.5 border-b border-dark-border/30">
