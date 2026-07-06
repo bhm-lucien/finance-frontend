@@ -250,4 +250,10 @@ export async function fetchPERiver(stockId: string, years = 5) {
   return res.data
 }
 
+/** AI 個股研究報告 */
+export async function fetchStockReport(stockId: string) {
+  const res = await api.get(`/stock/report/${stockId}`)
+  return res.data
+}
+
 export default api
