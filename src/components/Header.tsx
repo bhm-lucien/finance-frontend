@@ -67,7 +67,7 @@ export default function Header({ stockId, stockName, latest, realtime, children 
       <div className="flex items-center gap-4">
         <div>
           <h1 className="text-lg font-bold tracking-wider">
-            <span className="text-neon-blue">全方位 AI 股票分析儀表板</span>
+            <span className="text-neon-blue">飆股追獵者</span>
           </h1>
           <p className="text-[10px] text-gray-500 mt-0.5 tracking-wide">
             AI 主力行為判讀系統
