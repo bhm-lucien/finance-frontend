@@ -62,14 +62,14 @@ export default function Header({ stockId, stockName, latest, realtime, children 
   const arrow = isUp ? '▲' : '▼'
 
   return (
-    <header className="relative z-50 flex items-center justify-between px-5 py-2.5 border-b border-dark-border bg-dark-card/90 backdrop-blur header-scanline">
+    <header className="relative z-50 flex flex-wrap lg:flex-nowrap items-center justify-between px-3 lg:px-5 py-2 lg:py-2.5 border-b border-dark-border bg-dark-card/90 backdrop-blur header-scanline gap-2">
       {/* 左側標題 + 股票選擇 */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 lg:gap-4">
         <div>
-          <h1 className="text-lg font-bold tracking-wider">
+          <h1 className="text-base lg:text-lg font-bold tracking-wider">
             <span className="text-neon-blue">飆股追獵者</span>
           </h1>
-          <p className="text-[10px] text-gray-500 mt-0.5 tracking-wide">
+          <p className="text-[10px] text-gray-500 mt-0.5 tracking-wide hidden lg:block">
             AI 主力行為判讀系統
           </p>
         </div>

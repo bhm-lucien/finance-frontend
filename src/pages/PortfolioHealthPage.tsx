@@ -64,9 +64,9 @@ export default function PortfolioHealthPage() {
         <span className="text-gray-500 text-xs">輸入持倉資訊，AI 分析風險並提供建議</span>
       </div>
 
-      <div className="flex-1 flex gap-3 p-3 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-3 p-3 overflow-hidden">
         {/* 左側：輸入區 */}
-        <div className="w-96 bg-dark-card rounded-lg border border-dark-border/50 overflow-hidden flex flex-col flex-shrink-0">
+        <div className="w-full lg:w-96 bg-dark-card rounded-lg border border-dark-border/50 overflow-hidden flex flex-col flex-shrink-0">
           <div className="px-3 py-2 border-b border-dark-border/30 flex items-center justify-between flex-shrink-0">
             <h3 className="text-xs font-bold text-gray-300">📝 持倉清單</h3>
             <button onClick={addRow} className="px-2 py-0.5 text-xs bg-neon-blue/20 text-neon-blue rounded hover:bg-neon-blue/30">

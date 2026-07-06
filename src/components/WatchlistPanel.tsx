@@ -96,7 +96,7 @@ export default function WatchlistPanel({
       <div className="fixed inset-0 z-40 bg-black/50" onClick={onClose} />
 
       {/* 面板 */}
-      <div className="fixed top-0 right-0 h-full w-[420px] z-50 bg-dark-card border-l border-dark-border shadow-xl flex flex-col">
+      <div className="fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-dark-card border-l border-dark-border shadow-xl flex flex-col">
         <div className="flex items-center justify-between p-3 border-b border-dark-border flex-shrink-0">
           <h2 className="text-sm font-bold text-neon-blue">📊 自選股監控面板</h2>
           <div className="flex items-center gap-2">

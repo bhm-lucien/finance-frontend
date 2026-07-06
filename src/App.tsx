@@ -269,7 +269,7 @@ export default function App() {
 
   // ── 渲染 ──
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="min-h-screen lg:h-screen flex flex-col lg:overflow-hidden">
       {/* 頂部 Header */}
       <Header stockId={stockId} stockName={getStockName(stockId)} latest={data?.latest ?? null} realtime={realtime}>
         <StockSelector currentStock={stockId} onSelect={handleStockChange} loading={loading} />
@@ -297,7 +297,7 @@ export default function App() {
       <BacktestPanel isOpen={backtestOpen} onClose={() => setBacktestOpen(false)} stockId={stockId} />
 
       {/* 產業分類頁籤 */}
-      <div className="px-3 py-1.5 border-b border-dark-border/50 bg-dark-card/30">
+      <div className="hidden lg:block px-3 py-1.5 border-b border-dark-border/50 bg-dark-card/30">
         <IndustryTabs onSelect={handleStockChange} currentStock={stockId} />
       </div>
 
@@ -305,7 +305,7 @@ export default function App() {
       <MarketBar indices={marketIndices} limitStats={limitStats} />
 
       {/* Tab 切換列 */}
-      <div className="px-3 py-1 border-b border-dark-border/50 bg-dark-card/30 flex items-center gap-1 flex-shrink-0">
+      <div className="px-3 py-1 border-b border-dark-border/50 bg-dark-card/30 flex items-center gap-1 flex-shrink-0 overflow-x-auto">
         {[
           { key: 'dashboard', label: '📊 Dashboard', },
           { key: 'chip', label: '🏦 籌碼連續性', },
@@ -352,9 +352,9 @@ export default function App() {
 
       {/* === 主區塊：左右分欄 7:3（只在 Dashboard tab 顯示）=== */}
       {activeTab === 'dashboard' && (
-      <main className="flex-1 flex gap-3 p-3 overflow-hidden">
-        {/* 左半邊 grid — 12 個模組 */}
-        <div className="flex-[7] grid grid-cols-3 gap-2 overflow-y-auto" style={{ gridAutoRows: 'minmax(320px, auto)' }}>
+      <main className="flex-1 flex flex-col lg:flex-row gap-3 p-3 overflow-y-auto lg:overflow-hidden">
+        {/* 左半邊 grid — 模組 */}
+        <div className="flex-[7] grid grid-cols-1 lg:grid-cols-3 gap-2 lg:overflow-y-auto" style={{ gridAutoRows: 'minmax(280px, auto)' }}>
 
         {/* ── 第一排 ── */}
         {/* 1. 產業資金流向 */}
@@ -756,7 +756,7 @@ export default function App() {
         </div>
 
         {/* 右半邊 — AI 操盤建議面板（精簡版） */}
-        <aside className="flex-[3] overflow-y-auto rounded-lg border border-dark-border bg-dark-card p-4 space-y-4">
+        <aside className="w-full lg:flex-[3] overflow-y-auto rounded-lg border border-dark-border bg-dark-card p-4 space-y-4 order-first lg:order-none">
           <h2 className="text-lg font-bold text-neon-blue border-b border-dark-border/50 pb-2">AI 操盤建議</h2>
 
           {/* 1. 一段話總結 */}

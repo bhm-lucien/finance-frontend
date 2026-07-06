@@ -59,7 +59,7 @@ export default function ChipContinuityPage({ onSelectStock }: Props) {
       </div>
 
       {/* 主要內容 */}
-      <div className="flex-1 flex gap-3 p-3 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-3 p-3 overflow-hidden">
         {/* 左側：排行榜 */}
         <div className="flex-1 flex flex-col gap-3 overflow-hidden">
           {/* 外資連買排行 */}
@@ -142,7 +142,7 @@ export default function ChipContinuityPage({ onSelectStock }: Props) {
         </div>
 
         {/* 右側：個股明細 */}
-        <div className="w-72 bg-dark-card rounded-lg border border-dark-border/50 overflow-hidden flex flex-col flex-shrink-0">
+        <div className="w-full lg:w-72 bg-dark-card rounded-lg border border-dark-border/50 overflow-hidden flex flex-col flex-shrink-0">
           <div className="px-3 py-2 border-b border-dark-border/30 flex-shrink-0">
             <h3 className="text-xs font-bold text-gray-300">📋 個股籌碼明細</h3>
           </div>

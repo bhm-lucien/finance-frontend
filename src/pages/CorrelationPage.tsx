@@ -63,7 +63,7 @@ export default function CorrelationPage({ watchlist }: Props) {
       </div>
 
       {/* 主要內容 */}
-      <div className="flex-1 flex gap-3 p-3 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-3 p-3 overflow-hidden">
         {/* 左側：相關性矩陣 */}
         <div className="flex-1 bg-dark-card rounded-lg border border-dark-border/50 overflow-auto p-3">
           {loading ? (
@@ -111,7 +111,7 @@ export default function CorrelationPage({ watchlist }: Props) {
         </div>
 
         {/* 右側：高/低相關性配對 */}
-        <div className="w-64 flex flex-col gap-3 flex-shrink-0">
+        <div className="w-full lg:w-64 flex flex-col gap-3 flex-shrink-0">
           {/* 高相關性 */}
           <div className="flex-1 bg-dark-card rounded-lg border border-dark-border/50 overflow-hidden flex flex-col">
             <div className="px-3 py-2 border-b border-dark-border/30 flex-shrink-0">
