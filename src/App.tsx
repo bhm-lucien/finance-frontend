@@ -269,7 +269,7 @@ export default function App() {
 
   // ── 渲染 ──
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden lg:h-screen lg:overflow-hidden">
+    <div className="min-h-screen flex flex-col overflow-x-hidden lg:h-screen lg:overflow-hidden bg-dark-bg text-white">
       {/* 頂部 Header */}
       <Header stockId={stockId} stockName={getStockName(stockId)} latest={data?.latest ?? null} realtime={realtime}>
         <StockSelector currentStock={stockId} onSelect={handleStockChange} loading={loading} />
@@ -354,7 +354,7 @@ export default function App() {
       {activeTab === 'dashboard' && (
       <main className="flex-1 flex flex-col lg:flex-row gap-3 p-3 lg:overflow-hidden lg:min-h-0">
         {/* 左半邊 grid — 模組 */}
-        <div className="flex-[7] grid grid-cols-1 lg:grid-cols-3 gap-2 lg:overflow-y-auto" style={{ gridAutoRows: 'minmax(280px, auto)' }}>
+        <div className="w-full lg:flex-[7] grid grid-cols-1 lg:grid-cols-3 gap-2 lg:overflow-y-auto" style={{ gridAutoRows: 'minmax(280px, auto)' }}>
 
         {/* ── 第一排 ── */}
         {/* 1. 產業資金流向 */}
@@ -756,7 +756,7 @@ export default function App() {
         </div>
 
         {/* 右半邊 — AI 操盤建議面板（精簡版） */}
-        <aside className="w-full lg:flex-[3] overflow-y-auto rounded-lg border border-dark-border bg-dark-card p-4 space-y-4 order-first lg:order-none">
+        <aside className="w-full lg:flex-[3] lg:overflow-y-auto rounded-lg border border-dark-border bg-dark-card p-4 space-y-4 order-first lg:order-none max-h-[50vh] lg:max-h-none overflow-y-auto">
           <h2 className="text-lg font-bold text-neon-blue border-b border-dark-border/50 pb-2">AI 操盤建議</h2>
 
           {/* 1. 一段話總結 */}
