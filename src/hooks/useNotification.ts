@@ -1,5 +1,6 @@
 /**
  * 瀏覽器通知 Hook — 燈號變化或風險超標時推播
+ * 安全處理不支援 Notification API 的環境（如 iOS Safari）
  */
 import { useEffect, useRef } from 'react'
 
@@ -11,13 +12,17 @@ interface NotificationConfig {
   dayTradeRisk: number | null
 }
 
+function isNotificationSupported(): boolean {
+  return typeof window !== 'undefined' && 'Notification' in window
+}
+
 export function useNotification(config: NotificationConfig) {
   const prevSignal = useRef<string | null>(null)
   const prevRisk = useRef<string | null>(null)
 
   // 請求通知權限
   useEffect(() => {
-    if (config.enabled && 'Notification' in window && Notification.permission === 'default') {
+    if (config.enabled && isNotificationSupported() && Notification.permission === 'default') {
       Notification.requestPermission()
     }
   }, [config.enabled])
@@ -25,15 +30,13 @@ export function useNotification(config: NotificationConfig) {
   // 監控燈號變化
   useEffect(() => {
     if (!config.enabled || !config.signalLight) return
-    if (Notification.permission !== 'granted') return
+    if (!isNotificationSupported() || Notification.permission !== 'granted') return
 
-    // 首次載入不通知
     if (prevSignal.current === null) {
       prevSignal.current = config.signalLight
       return
     }
 
-    // 燈號變化時通知
     if (prevSignal.current !== config.signalLight) {
       const lightLabels: Record<string, string> = {
         red: '🔴 紅燈：主力出貨',
@@ -55,7 +58,7 @@ export function useNotification(config: NotificationConfig) {
   // 風險等級變化通知
   useEffect(() => {
     if (!config.enabled || !config.riskLevel) return
-    if (Notification.permission !== 'granted') return
+    if (!isNotificationSupported() || Notification.permission !== 'granted') return
 
     if (prevRisk.current === null) {
       prevRisk.current = config.riskLevel
@@ -75,7 +78,7 @@ export function useNotification(config: NotificationConfig) {
   // 隔日沖風險超標
   useEffect(() => {
     if (!config.enabled || config.dayTradeRisk === null) return
-    if (Notification.permission !== 'granted') return
+    if (!isNotificationSupported() || Notification.permission !== 'granted') return
 
     if (config.dayTradeRisk >= 80) {
       new Notification(`${config.stockId} 隔日沖風險超標`, {
