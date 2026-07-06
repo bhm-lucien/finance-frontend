@@ -269,7 +269,7 @@ export default function App() {
 
   // ── 渲染 ──
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden lg:h-screen lg:overflow-hidden bg-dark-bg text-white">
+    <div className="bg-dark-bg text-white min-h-screen lg:h-screen lg:overflow-hidden flex flex-col">
       {/* 頂部 Header */}
       <Header stockId={stockId} stockName={getStockName(stockId)} latest={data?.latest ?? null} realtime={realtime}>
         <StockSelector currentStock={stockId} onSelect={handleStockChange} loading={loading} />
@@ -352,7 +352,7 @@ export default function App() {
 
       {/* === 主區塊：左右分欄 7:3（只在 Dashboard tab 顯示）=== */}
       {activeTab === 'dashboard' && (
-      <main className="flex-1 flex flex-col lg:flex-row gap-3 p-3 lg:overflow-hidden lg:min-h-0">
+      <main className="flex-1 flex flex-col lg:flex-row gap-3 p-3 lg:overflow-hidden lg:min-h-0 pb-20">
         {/* 左半邊 grid — 模組 */}
         <div className="w-full lg:flex-[7] grid grid-cols-1 lg:grid-cols-3 gap-2 lg:overflow-y-auto" style={{ gridAutoRows: 'minmax(280px, auto)' }}>
 
