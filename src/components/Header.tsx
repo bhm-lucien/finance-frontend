@@ -62,7 +62,7 @@ export default function Header({ stockId, stockName, latest, realtime, children 
   const arrow = isUp ? '▲' : '▼'
 
   return (
-    <header className="relative z-50 flex flex-wrap lg:flex-nowrap items-center justify-between px-3 lg:px-5 py-2 lg:py-2.5 border-b border-dark-border bg-dark-card/90 backdrop-blur header-scanline gap-2 overflow-hidden max-w-[100vw]">
+    <header className="relative z-50 flex flex-wrap lg:flex-nowrap items-center justify-between px-3 lg:px-5 py-2 lg:py-2.5 border-b border-dark-border bg-dark-card/90 backdrop-blur header-scanline gap-2 max-w-[100vw]">
       {/* 左側標題 + 股票選擇 */}
       <div className="flex items-center gap-2 lg:gap-4">
         <div>
