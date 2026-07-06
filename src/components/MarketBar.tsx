@@ -25,9 +25,9 @@ export default function MarketBar({ indices, limitStats }: MarketBarProps) {
   if (!indices.length && !limitStats) return null
 
   return (
-    <div className="flex items-center justify-between px-4 py-1.5 border-b border-dark-border/50 bg-dark-bg/80 text-xs">
+    <div className="flex items-center justify-between px-4 py-1.5 border-b border-dark-border/50 bg-dark-bg/80 text-xs overflow-x-auto whitespace-nowrap">
       {/* 大盤指數 */}
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3 lg:gap-5">
         {indices.map(idx => {
           const isUp = idx.change >= 0
           const color = idx.price === 0 ? 'text-gray-500' : isUp ? 'text-neon-red' : 'text-neon-green'

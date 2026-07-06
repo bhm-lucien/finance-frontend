@@ -77,7 +77,7 @@ export default function Header({ stockId, stockName, latest, realtime, children 
       </div>
 
       {/* 中間即時報價 */}
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3 lg:gap-5 overflow-x-auto whitespace-nowrap flex-shrink-0">
         <InfoCell label="股票" value={`${stockId} ${stockName ?? ''}`} />
         <InfoCell
           label="目前價"
@@ -93,8 +93,8 @@ export default function Header({ stockId, stockName, latest, realtime, children 
         <InfoCell label="總量" value={volume > 0 ? String(volume) : '--'} />
         <InfoCell label="買進" value={bid > 0 ? bid.toFixed(2) : '--'} valueClass="text-neon-red" />
         <InfoCell label="賣出" value={ask > 0 ? ask.toFixed(2) : '--'} valueClass="text-neon-green" />
-        <InfoCell label="漲停" value={realtime?.limit_up ? realtime.limit_up.toFixed(2) : '--'} valueClass="text-neon-red" />
-        <InfoCell label="跌停" value={realtime?.limit_down ? realtime.limit_down.toFixed(2) : '--'} valueClass="text-neon-green" />
+        <span className="hidden lg:inline-flex"><InfoCell label="漲停" value={realtime?.limit_up ? realtime.limit_up.toFixed(2) : '--'} valueClass="text-neon-red" /></span>
+        <span className="hidden lg:inline-flex"><InfoCell label="跌停" value={realtime?.limit_down ? realtime.limit_down.toFixed(2) : '--'} valueClass="text-neon-green" /></span>
       </div>
 
       {/* 右側日期 + 即時狀態 */}
