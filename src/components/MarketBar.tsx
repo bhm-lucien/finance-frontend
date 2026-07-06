@@ -25,7 +25,7 @@ export default function MarketBar({ indices, limitStats }: MarketBarProps) {
   if (!indices.length && !limitStats) return null
 
   return (
-    <div className="flex items-center justify-between px-4 py-1.5 border-b border-dark-border/50 bg-dark-bg/80 text-xs overflow-x-auto whitespace-nowrap">
+    <div className="flex items-center justify-between px-4 py-1.5 border-b border-dark-border/50 bg-dark-bg/80 text-xs overflow-x-auto whitespace-nowrap max-w-[100vw]">
       {/* 大盤指數 */}
       <div className="flex items-center gap-3 lg:gap-5">
         {indices.map(idx => {
