@@ -358,7 +358,7 @@ export default function App() {
 
         {/* ── 第一排 ── */}
         {/* 1. 產業資金流向 */}
-        <ModuleCard number={1} title="產業資金流向" badge="ECF">
+        <ModuleCard number={1} title="產業資金流向">
           <div className="h-full flex flex-col">
             <div className="flex items-center gap-2 mb-1.5 flex-shrink-0">
               {sectorFlow?.summary && (
@@ -377,12 +377,12 @@ export default function App() {
         </ModuleCard>
 
         {/* 2. 今日產業焦點 */}
-        <ModuleCard number={2} title="今日產業焦點" badge="ECF">
+        <ModuleCard number={2} title="今日產業焦點">
           <SectorRankModule sectors={sectorFlow?.sectors ?? []} onSelectStock={handleStockChange} />
         </ModuleCard>
 
         {/* 3. 主力意圖 */}
-        <ModuleCard number={3} title="即時行情熱力圖" badge="ECF">
+        <ModuleCard number={3} title="即時行情熱力圖">
           <div className="h-full">
             <HeatmapChart
               sectors={heatmapData?.sectors ?? []}
@@ -392,7 +392,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 2. K 線型態辨識 */}
-        <ModuleCard number={4} title="K 線型態辨識" badge="ECF">
+        <ModuleCard number={4} title="K 線型態辨識">
           <div className="space-y-2 overflow-y-auto h-full">
             {!klinePattern ? (
               <p className="text-gray-500 text-center py-4">分析中...</p>
@@ -453,7 +453,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 3. K棒趨勢線 */}
-        <ModuleCard number={5} title="K棒趨勢線" badge="ECF">
+        <ModuleCard number={5} title="K棒趨勢線">
           <div className="h-full">
             {!trendlineData ? (
               <p className="text-gray-500 text-center py-8">分析中...</p>
@@ -482,7 +482,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 本益比河流圖 */}
-        <ModuleCard number={6} title="本益比河流圖" badge="ECF">
+        <ModuleCard number={6} title="本益比河流圖">
           <div className="h-full">
             {!peRiverData ? (
               <p className="text-gray-500 text-center py-8">分析中...</p>
@@ -497,7 +497,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 籌碼連續性（個股） */}
-        <ModuleCard number={7} title="法人連買/大戶持股" badge="ECF">
+        <ModuleCard number={7} title="法人連買/大戶持股">
           <div className="space-y-2">
             {!chipData ? (
               <p className="text-gray-500 text-center py-4">載入中...</p>
@@ -545,7 +545,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 4. 隔日沖風險 */}
-        <ModuleCard number={8} title="隔日沖風險分析圖" badge="ECF">
+        <ModuleCard number={8} title="隔日沖風險分析圖">
           <div className="space-y-2">
             <div className="text-center py-1">
               <p className="text-gray-500 mb-1">隔日沖風險：</p>
@@ -571,7 +571,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 5. 當沖指標（做多/做空方向） */}
-        <ModuleCard number={9} title="當沖指標" badge="ECF">
+        <ModuleCard number={9} title="當沖指標">
           <div className="space-y-2">
             {/* 基本指標 */}
             <div className="grid grid-cols-4 gap-1.5 text-center pb-1.5 border-b border-dark-border/30">
@@ -633,7 +633,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 6. 飆股雷達 */}
-        <ModuleCard number={6} title="飆股雷達圖" badge="ECF">
+        <ModuleCard number={6} title="飆股雷達圖">
           <RadarChart data={radar?.scores ?? radarFallback} />
           <div className="text-center mt-1">
             <span className="text-gray-400">飆股等級：</span>
@@ -644,7 +644,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 7. 劇本推演 */}
-        <ModuleCard number={7} title="明日劇本推演圖" badge="ECF">
+        <ModuleCard number={7} title="明日劇本推演圖">
           <div className="space-y-2">
             {(scenarios?.scenarios ?? [{name:'突破上漲',probability:33,color:'red',condition:'--',target:0,stop:0},{name:'震盪整理',probability:34,color:'orange',condition:'--',target:0,stop:0},{name:'轉弱下跌',probability:33,color:'green',condition:'--',target:0,stop:0}]).map((s: any, i: number) => (
               <div key={i} className={`p-2 rounded border ${s.color === 'red' ? 'bg-neon-red/10 border-neon-red/30' : s.color === 'orange' ? 'bg-neon-orange/10 border-neon-orange/30' : 'bg-neon-green/10 border-neon-green/30'}`}>
@@ -663,7 +663,7 @@ export default function App() {
         <BullBearModule data={data?.indicators.bull_bear ?? null} />
 
         {/* 9. K線 / 分時走勢 */}
-        <ModuleCard number={9} title="主力成本線分析圖" badge="ECF">
+        <ModuleCard number={9} title="主力成本線分析圖">
           <div className="h-full flex flex-col">
             <div className="flex gap-1 mb-1">
               <button onClick={() => setChartTab('kline')} className={`px-2 py-0.5 rounded ${chartTab === 'kline' ? 'bg-neon-blue/20 text-neon-blue' : 'text-gray-500 hover:text-gray-300'}`}>日K線</button>
@@ -677,7 +677,7 @@ export default function App() {
         </ModuleCard>
 
         {/* 10. 籌碼熱區 */}
-        <ModuleCard number={10} title="AI 籌碼熱區圖" badge="ECF">
+        <ModuleCard number={10} title="AI 籌碼熱區圖">
           <VolumeProfileChart data={data?.indicators.volume_profile ?? []} currentPrice={data?.latest.close} />
         </ModuleCard>
 
@@ -685,7 +685,7 @@ export default function App() {
         <HealthModule data={healthData} />
 
         {/* 12. 預警燈號 */}
-        <ModuleCard number={12} title="AI 飆股預警燈號系統" badge="ECF">
+        <ModuleCard number={12} title="AI 飆股預警燈號系統">
           <div className="space-y-2">
             <div className={`p-2 rounded border ${signal?.light === 'red' ? 'bg-neon-red/10 border-neon-red/30' : signal?.light === 'orange' ? 'bg-neon-orange/10 border-neon-orange/30' : signal?.light === 'green' ? 'bg-neon-green/10 border-neon-green/30' : 'bg-gray-800/50 border-gray-600/30'}`}>
               <div className="flex items-center gap-2">
@@ -706,12 +706,12 @@ export default function App() {
 
         {/* ── 第三排 ── */}
         {/* 13. LSTM 預測 */}
-        <ModuleCard number={13} title="類神經 AI 預測路徑圖" badge="ECF">
+        <ModuleCard number={13} title="類神經 AI 預測路徑圖">
           <PredictionChart history={forecast?.history ?? []} predictions={forecast?.predictions ?? []} currentPrice={forecast?.current_price} loading={forecastLoading} />
         </ModuleCard>
 
         {/* 14. 情緒指數 */}
-        <ModuleCard number={14} title="台股情緒指數圖" badge="ECF">
+        <ModuleCard number={14} title="台股情緒指數圖">
           <div className="space-y-2">
             <div className="text-center">
               <p className="text-gray-400 mb-1">市場情緒</p>
@@ -735,7 +735,7 @@ export default function App() {
 
 
         {/* 15. 即時新聞 */}
-        <ModuleCard number={15} title="即時財經新聞" badge="ECF">
+        <ModuleCard number={15} title="即時財經新聞">
           <div className="space-y-1.5 overflow-y-auto h-full">
             {news.length === 0 ? (
               <p className="text-gray-500 text-center py-4">載入中...</p>
@@ -908,7 +908,7 @@ export default function App() {
       {/* 底部聲明 */}
       <footer className="text-center text-gray-600 py-1 border-t border-dark-border/50 bg-dark-card/50">
         ※ 本圖為 AI 技術分析整理，僅供參考，不構成投資建議。投資有風險，請審慎評估並自負風險。
-        <span className="ml-4 text-neon-blue/40">ECF-AI SYSTEM v0.1.0</span>
+        <span className="ml-4 text-neon-blue/40"></span>
       </footer>
     </div>
   )

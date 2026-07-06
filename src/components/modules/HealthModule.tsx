@@ -18,7 +18,7 @@ interface HealthModuleProps {
 export default function HealthModule({ data }: HealthModuleProps) {
   if (!data) {
     return (
-      <ModuleCard number={9} title="個股健康度儀表板" badge="ECF">
+      <ModuleCard number={9} title="個股健康度儀表板">
         <div className="text-gray-500 text-center py-4">載入中...</div>
       </ModuleCard>
     )
@@ -29,7 +29,7 @@ export default function HealthModule({ data }: HealthModuleProps) {
   const statusColor = avg > 80 ? 'text-neon-red' : avg > 60 ? 'text-neon-green' : avg > 40 ? 'text-neon-orange' : 'text-gray-400'
 
   return (
-    <ModuleCard number={9} title="個股健康度儀表板" badge="ECF">
+    <ModuleCard number={9} title="個股健康度儀表板">
       <div className="grid grid-cols-2 gap-1 flex-1 min-h-0">
         <div className="flex flex-col items-center">
           <GaugeChart value={data.trend} label="趨勢健康" color="#ff4757" />

@@ -21,14 +21,14 @@ interface BullBearModuleProps {
 export default function BullBearModule({ data }: BullBearModuleProps) {
   if (!data) {
     return (
-      <ModuleCard number={6} title="AI 多空能量條" badge="ECF">
+      <ModuleCard number={6} title="AI 多空能量條">
         <div className="text-gray-500 text-center py-4">載入中...</div>
       </ModuleCard>
     )
   }
 
   return (
-    <ModuleCard number={6} title="AI 多空能量條" badge="ECF">
+    <ModuleCard number={6} title="AI 多空能量條">
       <div className="space-y-3">
         {/* 多方能量 */}
         <div>

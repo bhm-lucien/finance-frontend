@@ -70,7 +70,7 @@ export default function Header({ stockId, stockName, latest, realtime, children 
             <span className="text-neon-blue">全方位 AI 股票分析儀表板</span>
           </h1>
           <p className="text-[10px] text-gray-500 mt-0.5 tracking-wide">
-            AI 主力行為判讀系統 &nbsp;&nbsp; ECF
+            AI 主力行為判讀系統
           </p>
         </div>
         {children}
@@ -112,7 +112,7 @@ export default function Header({ stockId, stockName, latest, realtime, children 
             ) : (
               <span className="text-gray-500">○ 收盤</span>
             )}
-            <span className="text-neon-blue/70 ml-2">ECF-AI v0.1.0</span>
+            <span className="text-neon-blue/70 ml-2"></span>
           </p>
         </div>
       </div>
