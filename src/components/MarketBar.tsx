@@ -49,9 +49,9 @@ export default function MarketBar({ indices, limitStats }: MarketBarProps) {
         })}
       </div>
 
-      {/* 漲跌停統計（手機隱藏）*/}
+      {/* 漲跌停統計 */}
       {limitStats && (limitStats.limit_up > 0 || limitStats.limit_down > 0 || limitStats.up_count > 0) && (
-        <div className="hidden lg:flex items-center gap-4 mt-1 lg:mt-0">
+        <div className="flex items-center gap-3 lg:gap-4 mt-1 lg:mt-0 text-[10px] lg:text-xs">
           <div className="flex items-center gap-1">
             <span className="text-gray-500">漲停</span>
             <span className="text-neon-red font-bold">{limitStats.limit_up}</span>
