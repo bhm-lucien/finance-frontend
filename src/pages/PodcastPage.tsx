@@ -18,6 +18,7 @@ interface PodcastData {
   name: string
   apple_id: string
   notes_base_url: string | null
+  podsight_base_url: string | null
   episodes: Episode[]
 }
 
@@ -97,6 +98,16 @@ export default function PodcastPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
+                      {podcast.podsight_base_url && ep.date && (
+                        <a
+                          href={`${podcast.podsight_base_url}/${ep.date}/`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-2 py-0.5 text-[10px] bg-neon-purple/10 text-neon-purple border border-neon-purple/30 rounded hover:bg-neon-purple/20"
+                        >
+                          📝 AI摘要
+                        </a>
+                      )}
                       {podcast.notes_base_url && (
                         <a
                           href={podcast.notes_base_url}
@@ -114,7 +125,7 @@ export default function PodcastPage() {
                           rel="noopener noreferrer"
                           className="px-2 py-0.5 text-[10px] bg-dark-surface text-gray-400 border border-dark-border/50 rounded hover:text-white"
                         >
-                          🔗 原始
+                          🔗
                         </a>
                       )}
                     </div>
