@@ -256,4 +256,10 @@ export async function fetchStockReport(stockId: string) {
   return res.data
 }
 
+/** 取得財經 Podcast 列表 */
+export async function fetchPodcasts(podcastId = 'all', limit = 20) {
+  const res = await api.get('/stock/podcasts', { params: { podcast_id: podcastId, limit } })
+  return res.data
+}
+
 export default api

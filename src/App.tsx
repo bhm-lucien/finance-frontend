@@ -27,6 +27,7 @@ import ChipContinuityPage from './pages/ChipContinuityPage'
 import CorrelationPage from './pages/CorrelationPage'
 import PortfolioHealthPage from './pages/PortfolioHealthPage'
 import StockReportPage from './pages/StockReportPage'
+import PodcastPage from './pages/PodcastPage'
 import {
   fetchStockAnalysis, fetchForecast, fetchDayTradeRisk,
   fetchRadar, fetchScenarios, fetchHealth, fetchSignal, fetchSentiment,
@@ -73,7 +74,7 @@ export default function App() {
   const [filterOpen, setFilterOpen] = useState(false)
   const [backtestOpen, setBacktestOpen] = useState(false)
   const [notifyEnabled, setNotifyEnabled] = useState(true)
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'chip' | 'correlation' | 'portfolio' | 'report'>('dashboard')
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'chip' | 'correlation' | 'portfolio' | 'report' | 'podcast'>('dashboard')
   const [heatmapData, setHeatmapData] = useState<any>(null)
   const [peRiverData, setPeRiverData] = useState<any>(null)
   const [chipData, setChipData] = useState<any>(null)
@@ -313,6 +314,7 @@ export default function App() {
           { key: 'correlation', label: '🔗 相關性分析', },
           { key: 'portfolio', label: '🏥 持倉健檢', },
           { key: 'report', label: '📋 個股研報', },
+          { key: 'podcast', label: '🎙️ Podcast', },
         ].map(tab => (
           <button
             key={tab.key}
@@ -354,6 +356,11 @@ export default function App() {
       {activeTab === 'report' && (
         <div className="flex-1 overflow-hidden">
           <StockReportPage stockId={stockId} stockName={getStockName(stockId)} />
+        </div>
+      )}
+      {activeTab === 'podcast' && (
+        <div className="flex-1 overflow-hidden">
+          <PodcastPage />
         </div>
       )}
 
