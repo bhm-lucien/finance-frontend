@@ -128,9 +128,9 @@ export default function App() {
         loadRealtime()
       }
       loadRealtimeModules()
-    }, 30 * 1000)
-    const marketInterval = setInterval(loadMarketIndices, 60 * 1000)
-    const dataInterval = setInterval(loadData, 5 * 60 * 1000)
+    }, 60 * 1000)
+    const marketInterval = setInterval(loadMarketIndices, 120 * 1000)
+    const dataInterval = setInterval(loadData, 10 * 60 * 1000)
 
     return () => {
       clearInterval(realtimeInterval)
